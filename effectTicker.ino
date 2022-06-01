@@ -1,6 +1,6 @@
 uint32_t effTimer;
-byte ind;
-byte xPosition[] = {0, 4, 8, 12};
+// byte ind;
+// byte xPosition[] = {0, 4, 8, 12};
 
 void effectsTick()
 {
@@ -64,9 +64,9 @@ void effectsTick()
       case 17:
         whiteLamp();
         break;
-      case 18:
-        lavaLamp();
-        break;
+        // case 18:
+        //   lavaLamp();
+        //   break;
       }
       // switch (numHold)
       // { // индикатор уровня яркости/скорости/масштаба

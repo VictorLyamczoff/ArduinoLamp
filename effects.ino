@@ -1,9 +1,9 @@
 // ================================= ЭФФЕКТЫ ====================================
-// =============================================================
-void blurScreen(fract8 blur_amount, CRGB *LEDarray = leds)
-{
-  blur2d(LEDarray, WIDTH, HEIGHT, blur_amount);
-}
+// // =============================================================
+// void blurScreen(fract8 blur_amount, CRGB *LEDarray = leds)
+// {
+//   blur2d(LEDarray, WIDTH, HEIGHT, blur_amount);
+// }
 
 // --------------------------------- конфетти ------------------------------------
 void sparklesRoutine()
@@ -289,80 +289,80 @@ void whiteLamp()
   }
 }
 
-// ------------------------------ ЛАВОЛАМПА ------------------------------
-#define LIGHTERS_AM ((WIDTH + HEIGHT) / 4)
-int16_t lightersPos[2][LIGHTERS_AM];
-int8_t lightersSpeed[2][LIGHTERS_AM];
-byte lightersColor[LIGHTERS_AM];
-byte lightersBright[LIGHTERS_AM];
+// // ------------------------------ ЛАВОЛАМПА ------------------------------
+// #define LIGHTERS_AM ((WIDTH + HEIGHT) / 4)
+// int16_t lightersPos[2][LIGHTERS_AM];
+// int8_t lightersSpeed[2][LIGHTERS_AM];
+// byte lightersColor[LIGHTERS_AM];
+// byte lightersBright[LIGHTERS_AM];
 
-float ball[(WIDTH / 2) - ((WIDTH - 1) & 0x01)][2];
+// float ball[(WIDTH / 2) - ((WIDTH - 1) & 0x01)][2];
 
-void lavaLamp()
-{
-  if (loadingFlag)
-  {
-    for (byte i = 0; i < (WIDTH / 2) - ((WIDTH - 1) & 0x01); i++)
-    {
-      lightersSpeed[0][i] = random(1, 3);
-      ball[i][1] = (float)random8(5, 11) / (modes[18].speed) / 4.0;
-      ball[i][0] = 0;
-      lightersSpeed[1][i] = i * 2U + random8(2);
-    }
-    loadingFlag = false;
-  }
-  LavaLampRoutine();
-}
-void drawBlob(uint8_t l, CRGB color)
-{ //раз круги нарисовать не получается, будем попиксельно вырисовывать 2 варианта пузырей
-  if (lightersSpeed[0][l] == 2)
-  {
-    for (int8_t x = -2; x < 3; x++)
-      for (int8_t y = -2; y < 3; y++)
-        if (abs(x) + abs(y) < 4)
-          drawPixelXYF_Y(lightersSpeed[1][l] + x, ball[l][0] + y, color);
-  }
-  else
-  {
-    for (int8_t x = -1; x < 3; x++)
-      for (int8_t y = -1; y < 3; y++)
-        if (!(x == -1 && (y == -1 || y == 2) || x == 2 && (y == -1 || y == 2)))
-          drawPixelXYF_Y(lightersSpeed[1][l] + x, ball[l][0] + y, color);
-  }
-}
+// void lavaLamp()
+// {
+//   if (loadingFlag)
+//   {
+//     for (byte i = 0; i < (WIDTH / 2) - ((WIDTH - 1) & 0x01); i++)
+//     {
+//       lightersSpeed[0][i] = random(1, 3);
+//       ball[i][1] = (float)random8(5, 11) / (modes[18].speed) / 4.0;
+//       ball[i][0] = 0;
+//       lightersSpeed[1][i] = i * 2U + random8(2);
+//     }
+//     loadingFlag = false;
+//   }
+//   LavaLampRoutine();
+// }
+// void drawBlob(uint8_t l, CRGB color)
+// { //раз круги нарисовать не получается, будем попиксельно вырисовывать 2 варианта пузырей
+//   if (lightersSpeed[0][l] == 2)
+//   {
+//     for (int8_t x = -2; x < 3; x++)
+//       for (int8_t y = -2; y < 3; y++)
+//         if (abs(x) + abs(y) < 4)
+//           drawPixelXYF_Y(lightersSpeed[1][l] + x, ball[l][0] + y, color);
+//   }
+//   else
+//   {
+//     for (int8_t x = -1; x < 3; x++)
+//       for (int8_t y = -1; y < 3; y++)
+//         if (!(x == -1 && (y == -1 || y == 2) || x == 2 && (y == -1 || y == 2)))
+//           drawPixelXYF_Y(lightersSpeed[1][l] + x, ball[l][0] + y, color);
+//   }
+// }
 
-void LavaLampRoutine()
-{
-  dimAll(100);
-  for (byte i = 0; i < (WIDTH / 2) - ((WIDTH - 1) & 0x01); i++)
-  {
-    if (modes[18].scale == 1)
-    {
-      drawBlob(i, CHSV(hue, 255, 255));
-      hue++;
-    }
-    else
-      drawBlob(i, CHSV(modes[18].scale, 255, 255));
+// void LavaLampRoutine()
+// {
+//   dimAll(100);
+//   for (byte i = 0; i < (WIDTH / 2) - ((WIDTH - 1) & 0x01); i++)
+//   {
+//     if (modes[18].scale == 1)
+//     {
+//       drawBlob(i, CHSV(hue, 255, 255));
+//       hue++;
+//     }
+//     else
+//       drawBlob(i, CHSV(modes[18].scale, 255, 255));
 
-    if (ball[i][0] + lightersSpeed[0][i] >= HEIGHT - 1)
-      ball[i][0] += (ball[i][1] * ((HEIGHT - 1 - ball[i][0]) / lightersSpeed[0][i] + 0.005));
-    else if (ball[i][0] - lightersSpeed[0][i] <= 0)
-      ball[i][0] += (ball[i][1] * (ball[i][0] / lightersSpeed[0][i] + 0.005));
-    else
-      ball[i][0] += ball[i][1];
-    if (ball[i][0] < 0.01)
-    { // почему-то при нуле появляется мерцание (один кадр, еле заметно)
-      ball[i][1] = (float)random8(5, 11) / (257U - modes[18].speed) / 4.0;
-      ball[i][0] = 0.01;
-    }
-    else if (ball[i][0] > HEIGHT - 1.01)
-    { // тоже на всякий пожарный
-      ball[i][1] = (float)random8(5, 11) / (257U - modes[18].speed) / 4.0;
-      ball[i][1] = -ball[i][1];
-      ball[i][0] = HEIGHT - 1.01;
-    }
-  }
-}
+//     if (ball[i][0] + lightersSpeed[0][i] >= HEIGHT - 1)
+//       ball[i][0] += (ball[i][1] * ((HEIGHT - 1 - ball[i][0]) / lightersSpeed[0][i] + 0.005));
+//     else if (ball[i][0] - lightersSpeed[0][i] <= 0)
+//       ball[i][0] += (ball[i][1] * (ball[i][0] / lightersSpeed[0][i] + 0.005));
+//     else
+//       ball[i][0] += ball[i][1];
+//     if (ball[i][0] < 0.01)
+//     { // почему-то при нуле появляется мерцание (один кадр, еле заметно)
+//       ball[i][1] = (float)random8(5, 11) / (257U - modes[18].speed) / 4.0;
+//       ball[i][0] = 0.01;
+//     }
+//     else if (ball[i][0] > HEIGHT - 1.01)
+//     { // тоже на всякий пожарный
+//       ball[i][1] = (float)random8(5, 11) / (257U - modes[18].speed) / 4.0;
+//       ball[i][1] = -ball[i][1];
+//       ball[i][0] = HEIGHT - 1.01;
+//     }
+//   }
+// }
 
 //// ----------------------------- СВЕТЛЯКИ ------------------------------ в ардуино под него не хватает памяти
 // #define LIGHTERS_AM 100

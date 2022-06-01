@@ -35,40 +35,40 @@ uint32_t getPixColorXY(int8_t x, int8_t y)
 {
   return getPixColor(getPixelNumber(x, y));
 }
-// =================================================================
-void drawPixelXYF_Y(uint16_t x, float y, const CRGB &color)
-{
-  if (x < 0 || y < 0 || x > ((float)WIDTH) || y > ((float)HEIGHT))
-    return;
+// // =================================================================
+// void drawPixelXYF_Y(uint16_t x, float y, const CRGB &color)
+// {
+//   if (x < 0 || y < 0 || x > ((float)WIDTH) || y > ((float)HEIGHT))
+//     return;
 
-  uint8_t yy = (y - (int)y) * 255, iy = 255 - yy;
-  uint8_t wu[2] = {iy, yy};
+//   uint8_t yy = (y - (int)y) * 255, iy = 255 - yy;
+//   uint8_t wu[2] = {iy, yy};
 
-  for (int8_t i = 1; i >= 0; i--)
-  {
-    int16_t yn = y + (i & 1);
-    CRGB clr = getPixColorXY(x, yn);
-    if (yn > 0 && yn < (int)HEIGHT - 1)
-    {
-      clr.r = qadd8(clr.r, (color.r * wu[i]) >> 8);
-      clr.g = qadd8(clr.g, (color.g * wu[i]) >> 8);
-      clr.b = qadd8(clr.b, (color.b * wu[i]) >> 8);
-    }
-    else if (yn == 0 || yn == (int)HEIGHT - 1)
-    {
-      clr.r = qadd8(clr.r, (color.r * 85) >> 8);
-      clr.g = qadd8(clr.g, (color.g * 85) >> 8);
-      clr.b = qadd8(clr.b, (color.b * 85) >> 8);
-    }
-    drawPixelXY(x, yn, clr);
-  }
-}
+//   for (int8_t i = 1; i >= 0; i--)
+//   {
+//     int16_t yn = y + (i & 1);
+//     CRGB clr = getPixColorXY(x, yn);
+//     if (yn > 0 && yn < (int)HEIGHT - 1)
+//     {
+//       clr.r = qadd8(clr.r, (color.r * wu[i]) >> 8);
+//       clr.g = qadd8(clr.g, (color.g * wu[i]) >> 8);
+//       clr.b = qadd8(clr.b, (color.b * wu[i]) >> 8);
+//     }
+//     else if (yn == 0 || yn == (int)HEIGHT - 1)
+//     {
+//       clr.r = qadd8(clr.r, (color.r * 85) >> 8);
+//       clr.g = qadd8(clr.g, (color.g * 85) >> 8);
+//       clr.b = qadd8(clr.b, (color.b * 85) >> 8);
+//     }
+//     drawPixelXY(x, yn, clr);
+//   }
+// }
 
-// =============================================================
-void dimAll(uint8_t value)
-{
-  fadeToBlackBy(leds, NUM_LEDS, 255U - value);
-}
+// // =============================================================
+// void dimAll(uint8_t value)
+// {
+//   fadeToBlackBy(leds, NUM_LEDS, 255U - value);
+// }
 
 // **************** НАСТРОЙКА МАТРИЦЫ ****************
 #if (CONNECTION_ANGLE == 0 && STRIP_DIRECTION == 0)
@@ -132,11 +132,11 @@ uint16_t getPixelNumber(int8_t x, int8_t y)
   }
 }
 
-// ============================================================
-uint16_t XY(uint8_t x, uint8_t y)
-{
-  if (!(THIS_Y & 0x01) || MATRIX_TYPE)
-    return (THIS_Y * _WIDTH + THIS_X);
-  else
-    return (THIS_Y * _WIDTH + _WIDTH - THIS_X - 1);
-}
+// // ============================================================
+// uint16_t XY(uint8_t x, uint8_t y)
+// {
+//   if (!(THIS_Y & 0x01) || MATRIX_TYPE)
+//     return (THIS_Y * _WIDTH + THIS_X);
+//   else
+//     return (THIS_Y * _WIDTH + _WIDTH - THIS_X - 1);
+// }
