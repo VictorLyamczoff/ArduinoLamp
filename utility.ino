@@ -1,4 +1,47 @@
 // служебные функции
+// ------------- мигающий цвет (не эффект! используется для отображения краткосрочного предупреждения; блокирующий код!) -------------
+#define WARNING_BRIGHTNESS (10U) // яркость вспышки
+void showWarning(
+    CRGB color,               /* цвет вспышки                                                 */
+    uint32_t duration,        /* продолжительность отображения предупреждения (общее время)   */
+    uint16_t blinkHalfPeriod) /* продолжительность одной вспышки в миллисекундах (полупериод) */
+{
+  uint32_t blinkTimer = millis();
+  enum BlinkState
+  {
+    OFF = 0,
+    ON = 1
+  } blinkState = BlinkState::OFF;
+  FastLED.setBrightness(WARNING_BRIGHTNESS); // установка яркости для предупреждения
+  FastLED.clear();
+  delay(2);
+  FastLED.show();
+
+  for (uint16_t i = 0U; i < NUM_LEDS; i++) // установка цвета всех диодов в WARNING_COLOR
+  {
+    leds[i] = color;
+  }
+
+  uint32_t startTime = millis();
+  while (millis() - startTime <= (duration + 5)) // блокировка дальнейшего выполнения циклом на время отображения предупреждения
+  {
+    if (millis() - blinkTimer >= blinkHalfPeriod) // переключение вспышка/темнота
+    {
+      blinkTimer = millis();
+      blinkState = (BlinkState)!blinkState;
+      FastLED.setBrightness(blinkState == BlinkState::OFF ? 0 : WARNING_BRIGHTNESS);
+      delay(1);
+      FastLED.show();
+    }
+    delay(50);
+  }
+
+  FastLED.clear();
+  FastLED.setBrightness(ONflag ? modes[currentMode].brightness : 0); // установка яркости, которая была выставлена до вызова предупреждения
+  delay(1);
+  FastLED.show();
+  loadingFlag = true; // принудительное отображение текущего эффекта (того, что был активен перед предупреждением)
+}
 
 // залить все
 void fillAll(CRGB color)
@@ -132,11 +175,11 @@ uint16_t getPixelNumber(int8_t x, int8_t y)
   }
 }
 
-// // ============================================================
-// uint16_t XY(uint8_t x, uint8_t y)
-// {
-//   if (!(THIS_Y & 0x01) || MATRIX_TYPE)
-//     return (THIS_Y * _WIDTH + THIS_X);
-//   else
-//     return (THIS_Y * _WIDTH + _WIDTH - THIS_X - 1);
-// }
+// ============================================================
+uint16_t XY(uint8_t x, uint8_t y)
+{
+  if (!(THIS_Y & 0x01) || MATRIX_TYPE)
+    return (THIS_Y * _WIDTH + THIS_X);
+  else
+    return (THIS_Y * _WIDTH + _WIDTH - THIS_X - 1);
+}
