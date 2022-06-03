@@ -300,12 +300,12 @@ void RainRoutine()
     {
       if (random8(0, 5) == 0)
       {
-        if (modes[18].scale < 70)
-          drawPixelXY(x, HEIGHT - 1, CHSV(random(0, 9) * 28, 255, 255)); // Радужный дождь
-        else if (modes[18].scale > 70 && modes[18].scale < 140)
+        if (modes[18].scale < 10)
+          drawPixelXY(x, HEIGHT - 1, CHSV(random(0, 255), 255, 255)); // Радужный дождь
+        else if (modes[18].scale > 10 && modes[18].scale < 20)
           drawPixelXY(x, HEIGHT - 1, 0xE0FFFF - 0x101010 * random(0, 4)); // Снег
         else
-          drawPixelXY(x, HEIGHT - 1, CHSV(modes[18].scale + random(0, 16), 255, 255)); // Цветной дождь
+          drawPixelXY(x, HEIGHT - 1, CHSV(modes[18].scale, 255, 255)); // Цветной дождь
       }
     }
     else
