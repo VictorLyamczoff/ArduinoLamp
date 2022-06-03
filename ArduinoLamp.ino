@@ -17,7 +17,7 @@
 // ============= ДЛЯ РАЗРАБОТЧИКОВ =============
 #define LED_PIN 6 // пин ленты
 #define BTN_PIN 2
-#define MODE_AMOUNT 19
+#define MODE_AMOUNT 21 // всегда +1
 #define NUM_LEDS WIDTH *HEIGHT
 #define SEGMENTS 1     // диодов в одном "пикселе" (для создания матрицы из кусков ленты)
 #define PARSE_AMOUNT 1 // число значений в массиве, который хотим получить
@@ -91,7 +91,7 @@ void bluetooth()
       break;
 
     case 3:
-      if (++currentMode > MODE_AMOUNT)
+      if (++currentMode >= MODE_AMOUNT)
         currentMode = 0;
       FastLED.setBrightness(modes[currentMode].brightness);
       loadingFlag = true;

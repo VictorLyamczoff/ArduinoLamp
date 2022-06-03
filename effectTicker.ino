@@ -67,6 +67,12 @@ void effectsTick()
       case 18:
         RainRoutine();
         break;
+      case 19:
+        rainbowDiagonalRoutine();
+        break;
+      case 20:
+        stormRoutine();
+        break;
         // case 18:
         //   lavaLamp();
         //   break;

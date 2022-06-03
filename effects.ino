@@ -186,6 +186,7 @@ void drawFrame(int pcnt)
 }
 
 byte hue;
+
 // ---------------------------------------- радуга ------------------------------------------
 void rainbowVertical()
 {
@@ -205,6 +206,27 @@ void rainbowHorizontal()
     CHSV thisColor = CHSV((byte)(hue + i * modes[3].scale), 255, 255);
     for (byte j = 0; j < HEIGHT; j++)
       drawPixelXY(i, j, thisColor); // leds[getPixelNumber(i, j)] = thisColor;
+  }
+}
+
+// ---------------------------------------- диагональная радуга ------------------------------------------
+void rainbowDiagonalRoutine()
+{
+  if (loadingFlag)
+  {
+    loadingFlag = false;
+    FastLED.clear();
+  }
+
+  hue += 8;
+  for (uint8_t i = 0U; i < WIDTH; i++)
+  {
+    for (uint8_t j = 0U; j < HEIGHT; j++)
+    {
+      float twirlFactor = 3.0F * (modes[19].scale / 100.0F); // на сколько оборотов будет закручена матрица, [0..3]
+      CRGB thisColor = CHSV((uint8_t)(hue + (float)(WIDTH / HEIGHT * i + j * twirlFactor) * (float)(255 / maxDim)), 255, 255);
+      drawPixelXY(i, j, thisColor);
+    }
   }
 }
 
@@ -280,7 +302,7 @@ void whiteLamp()
 {
   for (byte y = 0; y < (HEIGHT / 2); y++)
   {
-    CHSV color = CHSV(100, 1, constrain(modes[17].brightness - (long)modes[17].speed * modes[17].brightness / 255 * y / 2, 1, 255));
+    CHSV color = CHSV(45, map(modes[17].speed, 0, 255, 0, 170), constrain(modes[17].brightness - (long)(255 - modes[17].scale) * modes[17].brightness / 255 * y / 2, 1, 255));
     for (byte x = 0; x < WIDTH; x++)
     {
       drawPixelXY(x, y + 8, color);
@@ -318,6 +340,45 @@ void RainRoutine()
     {
       drawPixelXY(x, y, getPixColorXY(x, y + 1));
     }
+  }
+}
+
+// ----------------------- ШТОРМ/МЕТЕЛЬ/МЕТЕОРЫ ------------------------
+#define SNOW_DENSE (60U)     // плотность снега
+#define TAIL_STEP (100U)     // длина хвоста
+#define SNOW_SATURATION (0U) // насыщенность (от 0 до 255)
+
+void stormRoutine()
+{
+  // заполняем головами комет левую и верхнюю линию
+  for (byte i = HEIGHT / 2; i < HEIGHT; i++)
+  {
+    if (getPixColorXY(0, i) == 0 && (random(0, SNOW_DENSE) == 0) && getPixColorXY(0, i + 1) == 0 && getPixColorXY(0, i - 1) == 0)
+      leds[getPixelNumber(0, i)] = CHSV(random(0, 200), modes[20].scale, 255);
+  }
+  for (byte i = 0; i < WIDTH / 2; i++)
+  {
+    if (getPixColorXY(i, HEIGHT - 1) == 0 && (random(0, SNOW_DENSE) == 0) && getPixColorXY(i + 1, HEIGHT - 1) == 0 && getPixColorXY(i - 1, HEIGHT - 1) == 0)
+      leds[getPixelNumber(i, HEIGHT - 1)] = CHSV(random(0, 200), modes[20].scale, 255);
+  }
+
+  // сдвигаем по диагонали
+  for (byte y = 0; y < HEIGHT - 1; y++)
+  {
+    for (byte x = WIDTH - 1; x > 0; x--)
+    {
+      drawPixelXY(x, y, getPixColorXY(x - 1, y + 1));
+    }
+  }
+
+  // уменьшаем яркость левой и верхней линии, формируем "хвосты"
+  for (byte i = HEIGHT / 2; i < HEIGHT; i++)
+  {
+    fadePixel(0, i, 120);
+  }
+  for (byte i = 0; i < WIDTH / 2; i++)
+  {
+    fadePixel(i, HEIGHT - 1, TAIL_STEP);
   }
 }
 
