@@ -35,7 +35,7 @@ void madnessNoise()
   {
     loadingFlag = false;
     scale = modes[5].scale;
-    speed = modes[5].speed;
+    speed = 255 - modes[5].speed;
   }
   fillnoise8();
   for (int i = 0; i < WIDTH; i++)
@@ -56,7 +56,7 @@ void rainbowNoise()
     loadingFlag = false;
     currentPalette = RainbowColors_p;
     scale = modes[9].scale;
-    speed = modes[9].speed;
+    speed = 255 - modes[9].speed;
     colorLoop = 1;
   }
   fillNoiseLED();
@@ -69,7 +69,7 @@ void rainbowStripeNoise()
     loadingFlag = false;
     currentPalette = RainbowStripeColors_p;
     scale = modes[10].scale;
-    speed = modes[10].speed;
+    speed = 255 - modes[10].speed;
     colorLoop = 1;
   }
   fillNoiseLED();
@@ -88,7 +88,7 @@ void zebraNoise()
     currentPalette[8] = CRGB::Red;
     currentPalette[12] = CRGB::Red;
     scale = modes[11].scale;
-    speed = modes[11].speed;
+    speed = 255 - modes[11].speed;
     colorLoop = 1;
   }
   fillNoiseLED();
@@ -101,7 +101,7 @@ void forestNoise()
     loadingFlag = false;
     currentPalette = ForestColors_p;
     scale = modes[12].scale;
-    speed = modes[12].speed;
+    speed = 255 - modes[12].speed;
     colorLoop = 0;
   }
   fillNoiseLED();
@@ -114,7 +114,7 @@ void oceanNoise()
     loadingFlag = false;
     currentPalette = OceanColors_p;
     scale = modes[13].scale;
-    speed = modes[13].speed;
+    speed = 255 - modes[13].speed;
     colorLoop = 0;
   }
 
@@ -128,7 +128,7 @@ void plasmaNoise()
     loadingFlag = false;
     currentPalette = PartyColors_p;
     scale = modes[8].scale;
-    speed = modes[8].speed;
+    speed = 255 - modes[8].speed;
     colorLoop = 1;
   }
   fillNoiseLED();
@@ -141,7 +141,7 @@ void cloudNoise()
     loadingFlag = false;
     currentPalette = CloudColors_p;
     scale = modes[6].scale;
-    speed = modes[6].speed;
+    speed = 255 - modes[6].speed;
     colorLoop = 0;
   }
   fillNoiseLED();
@@ -154,7 +154,7 @@ void lavaNoise()
     loadingFlag = false;
     currentPalette = LavaColors_p;
     scale = modes[7].scale;
-    speed = modes[7].speed;
+    speed = 255 - modes[7].speed;
     colorLoop = 0;
   }
   fillNoiseLED();

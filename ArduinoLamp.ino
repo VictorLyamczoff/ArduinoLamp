@@ -127,13 +127,13 @@ void bluetooth()
       break;
 
     case 8:
-      modes[currentMode].speed = constrain(modes[currentMode].speed + 1, 1, 255);
+      modes[currentMode].speed = constrain(modes[currentMode].speed - 1, 1, 255);
 
       loadingFlag = true;
       break;
 
     case 9:
-      modes[currentMode].speed = constrain(modes[currentMode].speed - 1, 1, 255);
+      modes[currentMode].speed = constrain(modes[currentMode].speed + 1, 1, 255);
 
       loadingFlag = true;
       break;
