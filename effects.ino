@@ -289,6 +289,38 @@ void whiteLamp()
   }
 }
 
+// --------------------------------- ДОЖДЬ -------------------------------
+void RainRoutine()
+{
+  for (uint8_t x = 0; x < WIDTH; x++)
+  {
+    // заполняем случайно верхнюю строку
+    CRGB thisColor = getPixColorXY(x, HEIGHT - 1);
+    if ((uint32_t)thisColor == 0)
+    {
+      if (random8(0, 5) == 0)
+      {
+        if (modes[18].scale < 70)
+          drawPixelXY(x, HEIGHT - 1, CHSV(random(0, 9) * 28, 255, 255)); // Радужный дождь
+        else if (modes[18].scale > 70 && modes[18].scale < 140)
+          drawPixelXY(x, HEIGHT - 1, 0xE0FFFF - 0x101010 * random(0, 4)); // Снег
+        else
+          drawPixelXY(x, HEIGHT - 1, CHSV(modes[18].scale + random(0, 16), 255, 255)); // Цветной дождь
+      }
+    }
+    else
+      leds[XY(x, HEIGHT - 1)] -= CHSV(0, 0, random(96, 128));
+  }
+  // сдвигаем всё вниз
+  for (uint8_t x = 0; x < WIDTH; x++)
+  {
+    for (uint8_t y = 0; y < HEIGHT - 1; y++)
+    {
+      drawPixelXY(x, y, getPixColorXY(x, y + 1));
+    }
+  }
+}
+
 // // ------------------------------ ЛАВОЛАМПА ------------------------------
 // #define LIGHTERS_AM ((WIDTH + HEIGHT) / 4)
 // int16_t lightersPos[2][LIGHTERS_AM];

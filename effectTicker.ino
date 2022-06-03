@@ -64,6 +64,9 @@ void effectsTick()
       case 17:
         whiteLamp();
         break;
+      case 18:
+        RainRoutine();
+        break;
         // case 18:
         //   lavaLamp();
         //   break;
