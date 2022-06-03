@@ -1,6 +1,6 @@
 // ---------- МАТРИЦА ---------
 #define BRIGHTNESS 40      // стандартная маскимальная яркость (0-255)
-#define CURRENT_LIMIT 2500 // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
+#define CURRENT_LIMIT 2000 // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
 
 #define WIDTH 16  // ширина матрицы
 #define HEIGHT 16 // высота матрицы
@@ -36,7 +36,7 @@ GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN); //сенсорная кнопка
 
 // ----------------- ПЕРЕМЕННЫЕ ------------------
 static const byte maxDim = max(WIDTH, HEIGHT);
-int8_t currentMode = 17;
+int8_t currentMode = 1;
 boolean loadingFlag = true;
 boolean ONflag = true;
 byte numHold = 0;
@@ -82,8 +82,7 @@ void bluetooth()
 
     case 2:
       if (--currentMode < 0)
-        currentMode = MODE_AMOUNT - 1;
-      Serial.println(currentMode);
+        currentMode = MODE_AMOUNT;
       FastLED.setBrightness(modes[currentMode].brightness);
       loadingFlag = true;
       memset8(leds, 0, NUM_LEDS * 3);
@@ -92,9 +91,8 @@ void bluetooth()
       break;
 
     case 3:
-      if (++currentMode >= MODE_AMOUNT)
+      if (++currentMode > MODE_AMOUNT)
         currentMode = 0;
-      Serial.println(currentMode);
       FastLED.setBrightness(modes[currentMode].brightness);
       loadingFlag = true;
       memset8(leds, 0, NUM_LEDS * 3);
@@ -103,14 +101,14 @@ void bluetooth()
       break;
 
     case 4:
-      modes[currentMode].brightness = constrain(modes[currentMode].brightness + 5, 1, 255);
+      modes[currentMode].brightness = constrain(modes[currentMode].brightness + 1, 1, 255);
 
       FastLED.setBrightness(modes[currentMode].brightness);
       loadingFlag = true;
       break;
 
     case 5:
-      modes[currentMode].brightness = constrain(modes[currentMode].brightness - 5, 1, 255);
+      modes[currentMode].brightness = constrain(modes[currentMode].brightness - 1, 1, 255);
 
       FastLED.setBrightness(modes[currentMode].brightness);
       loadingFlag = true;
@@ -155,21 +153,7 @@ void bluetooth()
           EEPROM.write(x * 3 + 13, modes[x].scale);
       }
       // индикация сохранения
-      ONflag = false;
-      changePower();
-      delay(100);
-      ONflag = true;
-      changePower();
-      ONflag = false;
-      changePower();
-      delay(100);
-      ONflag = true;
-      changePower();
-      ONflag = false;
-      changePower();
-      delay(100);
-      ONflag = true;
-      changePower();
+      showWarning(CHSV(96, 255, 255), 1000, 200);
       break;
 
     default:
@@ -216,7 +200,6 @@ void parsing()
 
 void setup()
 {
-
   // ЛЕНТА
   FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);

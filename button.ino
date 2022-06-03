@@ -36,11 +36,7 @@ void buttonTick()
           EEPROM.write(x * 3 + 13, modes[x].scale);
       }
       // индикация сохранения
-      ONflag = false;
-      changePower();
-      delay(200);
-      ONflag = true;
-      changePower();
+      showWarning(CHSV(96, 255, 255), 1000, 200);
     }
 
     if (touch.isHold() && ticker())
